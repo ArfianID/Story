@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.arfian.story.R
 import com.arfian.story.databinding.ActivityAddStoryBinding
@@ -27,6 +28,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
+import com.arfian.story.data.service.responses.Result
 
 class AddStoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddStoryBinding
@@ -43,9 +45,11 @@ class AddStoryActivity : AppCompatActivity() {
 
         setupView()
         showLoading()
-        binding.galleryButton.setOnClickListener { startGallery() }
-        binding.cameraButton.setOnClickListener { startCamera() }
-        binding.uploadButton.setOnClickListener { CoroutineScope(Dispatchers.IO).launch { uploadStory() } }
+        binding.apply {
+            galleryButton.setOnClickListener { startGallery() }
+            cameraButton.setOnClickListener { startCamera() }
+            uploadButton.setOnClickListener { CoroutineScope(Dispatchers.IO).launch { uploadStory() } }
+        }
     }
 
     private fun startGallery() {
@@ -112,16 +116,26 @@ class AddStoryActivity : AppCompatActivity() {
 
         withContext(Dispatchers.Main) { setLoadingState(true) }
 
-        val result = viewModel.uploadStory(compressedInputStream, description, lat, lon)
-
-        withContext(Dispatchers.Main) { setLoadingState(false) }
-        if (result.first) {
-            CoroutineScope(Dispatchers.Main).launch { showToast(result.second) }
-            val intent = Intent(this@AddStoryActivity, ListStoryActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-        } else {
-            CoroutineScope(Dispatchers.Main).launch { showToast(result.second) }
+        when (val result = viewModel.uploadStory(compressedInputStream, description, lat, lon)) {
+            is Result.Loading -> {
+                viewModel.setLoadingState(true)
+            }
+            is Result.Success -> {
+                viewModel.setLoadingState(false)
+                Toast.makeText(this@AddStoryActivity, result.data, Toast.LENGTH_SHORT).show()
+                val intent = Intent(this@AddStoryActivity, ListStoryActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+                finish()
+            }
+            is Result.Error -> {
+                viewModel.setLoadingState(false)
+                AlertDialog.Builder(this@AddStoryActivity)
+                    .setTitle(getString(R.string.failed))
+                    .setMessage(result.exception.message)
+                    .setPositiveButton(getString(R.string.ok)) { dialog, _ -> dialog.dismiss() }
+                    .show()
+            }
         }
     }
 

@@ -7,6 +7,7 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.arfian.story.R
 import com.arfian.story.data.service.responses.StoryItem
 import com.arfian.story.databinding.ActivityDetailStoryBinding
 import com.arfian.story.view.ViewModelFactory
@@ -16,10 +17,6 @@ class DetailStoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailStoryBinding
     private val viewModel: DetailStoryViewModel by viewModels {
         ViewModelFactory.getInstance(this)
-    }
-
-    companion object {
-        const val EXTRA_STORY = "extra_story"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +44,7 @@ class DetailStoryActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Detail Story"
+        supportActionBar?.title = getString(R.string.detail_story)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -78,5 +75,9 @@ class DetailStoryActivity : AppCompatActivity() {
         viewModel.isLoading.observe(this) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
+    }
+
+    companion object {
+        const val EXTRA_STORY = "extra_story"
     }
 }
