@@ -109,6 +109,22 @@ class StoryRepository private constructor(
         }
     }
 
+    suspend fun getStoriesWithLocation(): Result<List<StoryItem>> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = apiService.getStoriesWithLocation()
+                Result.Success(response.listStory)
+            } catch (e: HttpException) {
+                val jsonInString = e.response()?.errorBody()?.string()
+                val errorBody = Gson().fromJson(jsonInString, StoryResponse::class.java)
+                val errorMessage = errorBody.message
+                Result.Error(Exception(errorMessage))
+            } catch (t: Throwable) {
+                Result.Error(t.message?.let { Exception(it) } ?: Exception(context.getString(R.string.unknown_error)))
+            }
+        }
+    }
+
     suspend fun addStory(
         description: RequestBody,
         photo: MultipartBody.Part,

@@ -46,5 +46,7 @@
     <string name="congratulations_you_re_successfully_registered">Congratulations %1$s, you\'re successfully registered!</string>
     <string name="congratulations_you_re_successfully_logged_in">Congratulations %1$s, you\'re successfully logged in</string>
     <string name="story_uploaded_successfully">Story uploaded successfully</string>
+    <string name="map">map</string>
+    <string name="title_activity_maps">MapsActivity</string>
 
 </resources>

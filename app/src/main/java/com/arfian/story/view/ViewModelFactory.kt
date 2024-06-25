@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.arfian.story.data.StoryRepository
 import com.arfian.story.di.Injection
 import com.arfian.story.view.login.LoginViewModel
+import com.arfian.story.view.map.MapsViewModel
 import com.arfian.story.view.register.RegisterViewModel
 import com.arfian.story.view.story.detail.DetailStoryViewModel
 import com.arfian.story.view.story.list.ListStoryViewModel
@@ -30,6 +31,9 @@ class ViewModelFactory(private val repository: StoryRepository) : ViewModelProvi
             }
             modelClass.isAssignableFrom(AddStoryViewModel::class.java) -> {
                 AddStoryViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(MapsViewModel::class.java) -> {
+                MapsViewModel(repository) as T
             }
 
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

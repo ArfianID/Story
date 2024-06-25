@@ -6,11 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.arfian.story.data.StoryRepository
 import com.arfian.story.data.pref.SessionModel
+import com.arfian.story.data.service.responses.Result
 import com.arfian.story.data.service.responses.StoryItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import com.arfian.story.data.service.responses.Result
 
 class ListStoryViewModel(private val repository: StoryRepository) : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()

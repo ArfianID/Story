@@ -26,6 +26,7 @@ import com.arfian.story.data.service.responses.Result
 import com.arfian.story.databinding.ActivityListStoryBinding
 import com.arfian.story.view.ViewModelFactory
 import com.arfian.story.view.adapter.ListStoryAdapter
+import com.arfian.story.view.map.MapsActivity
 import com.arfian.story.view.story.detail.DetailStoryActivity
 import com.arfian.story.view.upload.AddStoryActivity
 import com.arfian.story.view.welcome.WelcomeActivity
@@ -72,6 +73,10 @@ class ListStoryActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.action_map -> {
+                startActivity(Intent(this, MapsActivity::class.java))
+                true
+            }
             R.id.action_language -> {
                 showLanguageSelectionDialog()
                 true
