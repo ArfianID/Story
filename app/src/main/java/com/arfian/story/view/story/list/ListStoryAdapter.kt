@@ -1,16 +1,18 @@
-package com.arfian.story.view.adapter
+package com.arfian.story.view.story.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.arfian.story.R
 import com.arfian.story.data.service.responses.StoryItem
 import com.arfian.story.databinding.ItemLayoutBinding
 import com.bumptech.glide.Glide
 
-class ListStoryAdapter(private val onClick: (story: StoryItem) -> Unit) : ListAdapter<StoryItem, ListStoryAdapter.ViewHolder>(DIFF_CALLBACK) {
+class ListStoryAdapter(private val onClick: (story: StoryItem) -> Unit) : PagingDataAdapter<StoryItem, ListStoryAdapter.ViewHolder>(
+    DIFF_CALLBACK
+) {
     class ViewHolder(val binding: ItemLayoutBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

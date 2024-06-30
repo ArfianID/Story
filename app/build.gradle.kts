@@ -73,4 +73,6 @@ dependencies {
     implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.androidx.exifinterface)
 
+    implementation(libs.androidx.paging.runtime.ktx)
+
 }

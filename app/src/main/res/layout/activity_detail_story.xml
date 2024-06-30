@@ -175,7 +175,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:text="@string/longitude"
-        android:textColor="#311B92"
+        android:textColor="@color/md_theme_scrim"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

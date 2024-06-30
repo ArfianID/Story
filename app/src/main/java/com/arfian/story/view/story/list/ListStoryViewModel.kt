@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.arfian.story.data.StoryRepository
 import com.arfian.story.data.pref.SessionModel
 import com.arfian.story.data.service.responses.Result
@@ -24,12 +26,8 @@ class ListStoryViewModel(private val repository: StoryRepository) : ViewModel() 
         return repository.getSession()
     }
 
-    fun getStories(): Flow<Result<List<StoryItem>>> {
-        return flow {
-            emit(Result.Loading)
-            val result = repository.getStories()
-            emit(result)
-        }
+    fun getStories(): Flow<PagingData<StoryItem>> {
+        return repository.getStories().cachedIn(viewModelScope)
     }
 
     fun logout() {

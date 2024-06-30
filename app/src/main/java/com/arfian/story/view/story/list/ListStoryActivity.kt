@@ -8,6 +8,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -19,18 +20,19 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arfian.story.R
 import com.arfian.story.data.pref.SessionModel
-import com.arfian.story.data.service.responses.Result
 import com.arfian.story.databinding.ActivityListStoryBinding
 import com.arfian.story.view.ViewModelFactory
-import com.arfian.story.view.adapter.ListStoryAdapter
 import com.arfian.story.view.map.MapsActivity
 import com.arfian.story.view.story.detail.DetailStoryActivity
 import com.arfian.story.view.upload.AddStoryActivity
 import com.arfian.story.view.welcome.WelcomeActivity
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -39,6 +41,7 @@ class ListStoryActivity : AppCompatActivity() {
         ViewModelFactory.getInstance(this)
     }
     private lateinit var binding: ActivityListStoryBinding
+    private lateinit var adapter: ListStoryAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,8 +52,6 @@ class ListStoryActivity : AppCompatActivity() {
 
         setupView()
         showLoading()
-        checkUserSession()
-        loadStories()
         setupFabAddStory()
         setupRefresh()
     }
@@ -77,16 +78,19 @@ class ListStoryActivity : AppCompatActivity() {
                 startActivity(Intent(this, MapsActivity::class.java))
                 true
             }
+
             R.id.action_language -> {
                 showLanguageSelectionDialog()
                 true
             }
+
             R.id.action_logout -> {
                 viewModel.logout()
                 startActivity(Intent(this, WelcomeActivity::class.java))
                 finish()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -111,7 +115,9 @@ class ListStoryActivity : AppCompatActivity() {
     }
 
     private suspend fun setupAdapter() {
-        val adapter = ListStoryAdapter { story ->
+        var isFirstLoad = true
+
+        adapter = ListStoryAdapter { story ->
             val intent = Intent(this, DetailStoryActivity::class.java).apply {
                 putExtra(DetailStoryActivity.EXTRA_STORY, story)
             }
@@ -123,27 +129,30 @@ class ListStoryActivity : AppCompatActivity() {
             layoutAnimation = AnimationUtils.loadLayoutAnimation(this@ListStoryActivity, R.anim.item_animation_from_top)
         }
 
-        viewModel.setLoadingState(true)
-        viewModel.getStories().collect { result ->
-            when (result) {
-                is Result.Loading -> {
-                    viewModel.setLoadingState(true)
-                }
-                is Result.Success -> {
-                    viewModel.setLoadingState(false)
-                    val stories = result.data
-                    if (stories.isEmpty()) {
-                        binding.ivBlankList.visibility = View.VISIBLE
+        binding.rvStory.adapter = adapter.withLoadStateFooter(
+            footer = LoadingStateAdapter { adapter.retry() }
+        )
+
+        viewModel.getStories().collectLatest { pagingData ->
+            adapter.submitData(lifecycle, pagingData)
+            viewModel.setLoadingState(true)
+            adapter.addLoadStateListener { loadStates ->
+                if (loadStates.refresh is LoadState.NotLoading) {
+                    viewModel.setLoadingState(false) // Set loading state to false when data has loaded
+                    if (adapter.itemCount == 0) {
+                        binding.ivBlankList.visibility = View.VISIBLE // Show ImageView when data is empty
                     } else {
-                        binding.ivBlankList.visibility = View.GONE
-                        adapter.submitList(stories)
-                        binding.rvStory.scheduleLayoutAnimation()
+                        binding.ivBlankList.visibility = View.GONE // Hide ImageView when data has loaded
+                        if (isFirstLoad) {
+                            binding.rvStory.scheduleLayoutAnimation()
+                            isFirstLoad = false
+                        }
                     }
-                }
-                is Result.Error -> {
-                    viewModel.setLoadingState(false)
-                    val errorMessage = result.exception.message
-                    if (errorMessage != null) showNetworkErrorSnackbar(errorMessage)
+                } else if (loadStates.refresh is LoadState.Error) {
+                    viewModel.setLoadingState(false) // Set loading state to false when there's an error
+                    binding.ivBlankList.visibility = View.VISIBLE // Show ImageView when there's an error
+                } else {
+                    binding.ivBlankList.visibility = View.GONE // Hide ImageView when data is loading
                 }
             }
         }
@@ -165,7 +174,8 @@ class ListStoryActivity : AppCompatActivity() {
     }
 
     private fun isNetworkConnected(): Boolean {
-        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val connectivityManager =
+            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork = connectivityManager.activeNetwork
         val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
         return networkCapabilities != null &&
@@ -202,7 +212,16 @@ class ListStoryActivity : AppCompatActivity() {
     }
 
     private fun showLanguageSelectionDialog() {
-        val languages = arrayOf("Dutch", "English", "French", "German", "Indonesia", "Japanese", "Korean", "Spanish")
+        val languages = arrayOf(
+            "Dutch",
+            "English",
+            "French",
+            "German",
+            "Indonesia",
+            "Japanese",
+            "Korean",
+            "Spanish"
+        )
         val languageCodes = arrayOf("nl", "en", "fr", "de", "in", "ja", "ko", "es")
 
         AlertDialog.Builder(this).apply {
