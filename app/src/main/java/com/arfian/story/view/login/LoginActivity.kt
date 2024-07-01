@@ -17,7 +17,7 @@ import com.arfian.story.R
 import com.arfian.story.data.service.responses.Result
 import com.arfian.story.databinding.ActivityLoginBinding
 import com.arfian.story.view.ViewModelFactory
-import com.arfian.story.view.story.list.ListStoryActivity
+import com.arfian.story.view.story.home.HomeStoryActivity
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
@@ -64,7 +64,7 @@ class LoginActivity : AppCompatActivity() {
                     is Result.Success -> {
                         viewModel.setLoadingState(false)
                         Toast.makeText(this@LoginActivity, result.data, Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this@LoginActivity, ListStoryActivity::class.java)
+                        val intent = Intent(this@LoginActivity, HomeStoryActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                         startActivity(intent)
                         finish()

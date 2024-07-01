@@ -1,4 +1,4 @@
-package com.arfian.story.view.story.list
+package com.arfian.story.view.story.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,13 +8,11 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.arfian.story.data.StoryRepository
 import com.arfian.story.data.pref.SessionModel
-import com.arfian.story.data.service.responses.Result
 import com.arfian.story.data.service.responses.StoryItem
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
-class ListStoryViewModel(private val repository: StoryRepository) : ViewModel() {
+class HomeStoryViewModel(private val repository: StoryRepository) : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
