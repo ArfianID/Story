@@ -1,16 +1,20 @@
-package com.arfian.story.view.adapter
+package com.arfian.story.view.story.home
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.arfian.story.R
 import com.arfian.story.data.service.responses.StoryItem
 import com.arfian.story.databinding.ItemLayoutBinding
+import com.arfian.story.view.story.detail.DetailStoryActivity
 import com.bumptech.glide.Glide
 
-class ListStoryAdapter(private val onClick: (story: StoryItem) -> Unit) : ListAdapter<StoryItem, ListStoryAdapter.ViewHolder>(DIFF_CALLBACK) {
+class ListStoryAdapter : PagingDataAdapter<StoryItem, ListStoryAdapter.ViewHolder>(
+    DIFF_CALLBACK
+) {
     class ViewHolder(val binding: ItemLayoutBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -29,7 +33,12 @@ class ListStoryAdapter(private val onClick: (story: StoryItem) -> Unit) : ListAd
                 binding.description.text = story.description
 
                 itemView.setOnClickListener {
-                    onClick(story)
+                    val intent = Intent(it.context, DetailStoryActivity::class.java).apply {
+                        putExtra(DetailStoryActivity.EXTRA_STORY, story)
+//                        putExtra(DetailStoryActivity.EXTRA_LATITUDE, story.lat)
+//                        putExtra(DetailStoryActivity.EXTRA_LONGITUDE, story.lon)
+                    }
+                    it.context.startActivity(intent)
                 }
             }
         }

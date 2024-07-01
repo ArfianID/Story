@@ -1,4 +1,4 @@
-package com.arfian.story.view.story.list
+package com.arfian.story.view.story.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

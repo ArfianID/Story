@@ -56,6 +56,8 @@ class DetailStoryActivity : AppCompatActivity() {
     @Suppress("DEPRECATION")
     private fun getStoryDetail() {
         val story: StoryItem? = intent.getParcelableExtra(EXTRA_STORY)
+//        val lat: Double = intent.getDoubleExtra(EXTRA_LATITUDE, 0.0)
+//        val lon: Double = intent.getDoubleExtra(EXTRA_LONGITUDE, 0.0)
         binding.apply {
             story?.let {
                 Glide.with(this@DetailStoryActivity)
@@ -79,5 +81,7 @@ class DetailStoryActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_STORY = "extra_story"
+//        const val EXTRA_LATITUDE = "extra_latitude"
+//        const val EXTRA_LONGITUDE = "extra_longitude"
     }
 }

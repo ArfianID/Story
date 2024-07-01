@@ -38,7 +38,7 @@
             android:name=".view.login.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".view.story.list.ListStoryActivity"
+            android:name=".view.story.home.HomeStoryActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

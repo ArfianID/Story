@@ -1,11 +1,9 @@
 package com.arfian.story.data
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.liveData
 import com.arfian.story.R
 import com.arfian.story.data.pref.LanguagePreference
 import com.arfian.story.data.pref.SessionModel
@@ -97,22 +95,6 @@ class StoryRepository private constructor(
             }
         }
     }
-
-//    suspend fun getStories(): Result<List<StoryItem>> {
-//        return withContext(Dispatchers.IO) {
-//            try {
-//                val response = apiService.getStories()
-//                Result.Success(response.listStory)
-//            } catch (e: HttpException) {
-//                val jsonInString = e.response()?.errorBody()?.string()
-//                val errorBody = Gson().fromJson(jsonInString, StoryResponse::class.java)
-//                val errorMessage = errorBody.message
-//                Result.Error(Exception(errorMessage))
-//            } catch (t: Throwable) {
-//                Result.Error(t.message?.let { Exception(it) } ?: Exception(context.getString(R.string.unknown_error)))
-//            }
-//        }
-//    }
 
     fun getStories(): Flow<PagingData<StoryItem>> {
         return Pager(

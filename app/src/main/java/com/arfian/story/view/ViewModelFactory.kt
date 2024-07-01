@@ -9,7 +9,7 @@ import com.arfian.story.view.login.LoginViewModel
 import com.arfian.story.view.map.MapsViewModel
 import com.arfian.story.view.register.RegisterViewModel
 import com.arfian.story.view.story.detail.DetailStoryViewModel
-import com.arfian.story.view.story.list.ListStoryViewModel
+import com.arfian.story.view.story.home.HomeStoryViewModel
 import com.arfian.story.view.upload.AddStoryViewModel
 
 class ViewModelFactory(private val repository: StoryRepository) : ViewModelProvider.NewInstanceFactory() {
@@ -17,8 +17,8 @@ class ViewModelFactory(private val repository: StoryRepository) : ViewModelProvi
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
-            modelClass.isAssignableFrom(ListStoryViewModel::class.java) -> {
-                ListStoryViewModel(repository) as T
+            modelClass.isAssignableFrom(HomeStoryViewModel::class.java) -> {
+                HomeStoryViewModel(repository) as T
             }
             modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
                 LoginViewModel(repository) as T
