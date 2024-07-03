@@ -12,9 +12,7 @@ import com.arfian.story.databinding.ItemLayoutBinding
 import com.arfian.story.view.story.detail.DetailStoryActivity
 import com.bumptech.glide.Glide
 
-class ListStoryAdapter : PagingDataAdapter<StoryItem, ListStoryAdapter.ViewHolder>(
-    DIFF_CALLBACK
-) {
+class HomeStoryAdapter : PagingDataAdapter<StoryItem, HomeStoryAdapter.ViewHolder>(DIFF_CALLBACK) {
     class ViewHolder(val binding: ItemLayoutBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -35,8 +33,6 @@ class ListStoryAdapter : PagingDataAdapter<StoryItem, ListStoryAdapter.ViewHolde
                 itemView.setOnClickListener {
                     val intent = Intent(it.context, DetailStoryActivity::class.java).apply {
                         putExtra(DetailStoryActivity.EXTRA_STORY, story)
-//                        putExtra(DetailStoryActivity.EXTRA_LATITUDE, story.lat)
-//                        putExtra(DetailStoryActivity.EXTRA_LONGITUDE, story.lon)
                     }
                     it.context.startActivity(intent)
                 }

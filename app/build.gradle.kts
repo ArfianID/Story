@@ -41,6 +41,11 @@ android {
         viewBinding = true
         buildConfig = true
     }
+    @Suppress("UnstableApiUsage")
+    testOptions {
+        animationsDisabled = true
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -51,11 +56,19 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.play.services.maps)
+
+    implementation(libs.androidx.espresso.idling.resource)
+    implementation(libs.androidx.espresso.intents)
+    androidTestImplementation(libs.androidx.core.testing)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation (libs.androidx.espresso.idling.resource)
+    androidTestImplementation(libs.androidx.espresso.core)
     testImplementation(libs.junit)
+    testImplementation(libs.androidx.core.testing)
+    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockito.core)
     testImplementation(libs.mockito.inline)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
@@ -66,15 +79,12 @@ dependencies {
     implementation(libs.retrofit2.converter.gson)
     implementation(libs.logging.interceptor)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-
     implementation (libs.glide)
     annotationProcessor (libs.compiler)
 
     implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.androidx.exifinterface)
-
     implementation(libs.androidx.paging.runtime.ktx)
-
     implementation (libs.play.services.location)
 
 }

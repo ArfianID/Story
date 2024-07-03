@@ -23,7 +23,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arfian.story.R
 import com.arfian.story.data.pref.SessionModel
-import com.arfian.story.databinding.ActivityListStoryBinding
+import com.arfian.story.databinding.ActivityHomeStoryBinding
 import com.arfian.story.view.ViewModelFactory
 import com.arfian.story.view.map.MapsActivity
 import com.arfian.story.view.upload.AddStoryActivity
@@ -37,12 +37,12 @@ class HomeStoryActivity : AppCompatActivity() {
     private val viewModel by viewModels<HomeStoryViewModel> {
         ViewModelFactory.getInstance(this)
     }
-    private lateinit var binding: ActivityListStoryBinding
-    private lateinit var adapter: ListStoryAdapter
+    private lateinit var binding: ActivityHomeStoryBinding
+    private lateinit var adapter: HomeStoryAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityListStoryBinding.inflate(layoutInflater)
+        binding = ActivityHomeStoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setLocale(viewModel.getSelectedLanguage().ifEmpty { "en" })
@@ -114,7 +114,7 @@ class HomeStoryActivity : AppCompatActivity() {
     private suspend fun setupAdapter() {
         var isFirstLoad = true
 
-        adapter = ListStoryAdapter()
+        adapter = HomeStoryAdapter()
         binding.rvStory.apply {
             layoutManager = LinearLayoutManager(this@HomeStoryActivity)
             this.adapter = adapter

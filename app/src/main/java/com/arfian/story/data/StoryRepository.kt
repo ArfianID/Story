@@ -15,6 +15,8 @@ import com.arfian.story.data.service.responses.Result
 import com.arfian.story.data.service.responses.StoryItem
 import com.arfian.story.data.service.responses.StoryResponse
 import com.arfian.story.data.service.responses.UploadResponse
+import com.arfian.story.utils.wrapEspressoIdlingResource
+import com.arfian.story.view.story.home.StoryPagingSource
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -39,7 +41,9 @@ class StoryRepository private constructor(
     }
 
     suspend fun logout() {
-        sessionPreference.logout()
+        wrapEspressoIdlingResource {
+            sessionPreference.logout()
+        }
     }
 
     suspend fun register(name: String, email: String, password: String): Result<String> {
@@ -52,9 +56,11 @@ class StoryRepository private constructor(
                         context.getString(
                             R.string.congratulations_you_re_successfully_registered,
                             name
-                        ))
+                        )
+                    )
                 } else {
-                    val message = body?.message ?: response.errorBody()?.string() ?: context.getString(R.string.unknown_error)
+                    val message = body?.message ?: response.errorBody()?.string()
+                    ?: context.getString(R.string.unknown_error)
                     Result.Error(Exception(message))
                 }
             } catch (e: HttpException) {
@@ -63,35 +69,41 @@ class StoryRepository private constructor(
                 val errorMessage = errorBody.message
                 Result.Error(Exception(errorMessage))
             } catch (t: Throwable) {
-                Result.Error(t.message?.let { Exception(it) } ?: Exception(context.getString(R.string.unknown_error)))
+                Result.Error(t.message?.let { Exception(it) }
+                    ?: Exception(context.getString(R.string.unknown_error)))
             }
         }
     }
 
     suspend fun login(email: String, password: String): Result<String> {
-        return withContext(Dispatchers.IO) {
-            try {
-                val response = apiService.login(email, password).execute()
-                val body = response.body()
-                if (response.isSuccessful && body != null && !body.error) {
-                    val user = SessionModel(body.loginResult.userId, body.loginResult.token, true)
-                    saveSession(user)
-                    Result.Success(
-                        context.getString(
-                            R.string.congratulations_you_re_successfully_logged_in,
-                            body.loginResult.name
-                        ))
-                } else {
-                    val message = body?.message ?: response.errorBody()?.string() ?: context.getString(R.string.unknown_error)
-                    Result.Error(Exception(message))
+        wrapEspressoIdlingResource {
+            return withContext(Dispatchers.IO) {
+                try {
+                    val response = apiService.login(email, password).execute()
+                    val body = response.body()
+                    if (response.isSuccessful && body != null && !body.error) {
+                        val user = SessionModel(body.loginResult.userId, body.loginResult.token, true)
+                        saveSession(user)
+                        Result.Success(
+                            context.getString(
+                                R.string.congratulations_you_re_successfully_logged_in,
+                                body.loginResult.name
+                            )
+                        )
+                    } else {
+                        val message = body?.message ?: response.errorBody()?.string()
+                        ?: context.getString(R.string.unknown_error)
+                        Result.Error(Exception(message))
+                    }
+                } catch (e: HttpException) {
+                    val jsonInString = e.response()?.errorBody()?.string()
+                    val errorBody = Gson().fromJson(jsonInString, LoginResponse::class.java)
+                    val errorMessage = errorBody.message
+                    Result.Error(Exception(errorMessage))
+                } catch (t: Throwable) {
+                    Result.Error(t.message?.let { Exception(it) }
+                        ?: Exception(context.getString(R.string.unknown_error)))
                 }
-            } catch (e: HttpException) {
-                val jsonInString = e.response()?.errorBody()?.string()
-                val errorBody = Gson().fromJson(jsonInString, LoginResponse::class.java)
-                val errorMessage = errorBody.message
-                Result.Error(Exception(errorMessage))
-            } catch (t: Throwable) {
-                Result.Error(t.message?.let { Exception(it) } ?: Exception(context.getString(R.string.unknown_error)))
             }
         }
     }
@@ -118,7 +130,8 @@ class StoryRepository private constructor(
                 val errorMessage = errorBody.message
                 Result.Error(Exception(errorMessage))
             } catch (t: Throwable) {
-                Result.Error(t.message?.let { Exception(it) } ?: Exception(context.getString(R.string.unknown_error)))
+                Result.Error(t.message?.let { Exception(it) }
+                    ?: Exception(context.getString(R.string.unknown_error)))
             }
         }
     }
@@ -136,7 +149,8 @@ class StoryRepository private constructor(
                 if (response.isSuccessful && body != null && !body.error) {
                     Result.Success(context.getString(R.string.story_uploaded_successfully))
                 } else {
-                    val message = body?.message ?: response.errorBody()?.string() ?: context.getString(R.string.unknown_error)
+                    val message = body?.message ?: response.errorBody()?.string()
+                    ?: context.getString(R.string.unknown_error)
                     Result.Error(Exception(message))
                 }
             } catch (e: HttpException) {
@@ -145,7 +159,8 @@ class StoryRepository private constructor(
                 val errorMessage = errorBody.message
                 Result.Error(Exception(errorMessage))
             } catch (t: Throwable) {
-                Result.Error(t.message?.let { Exception(it) } ?: Exception(context.getString(R.string.unknown_error)))
+                Result.Error(t.message?.let { Exception(it) }
+                    ?: Exception(context.getString(R.string.unknown_error)))
             }
         }
     }

@@ -7,29 +7,32 @@ kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
-espressoCore = "3.6.1"
+espresso = "3.6.1"
 appcompat = "1.7.0"
-lifecycleViewmodelKtx = "2.8.2"
+lifecycleViewmodelKtx = "2.8.3"
 material = "1.12.0"
 activity = "1.9.0"
 constraintlayout = "2.1.4"
 converterGson = "2.11.0"
-lifecycleRuntimeKtx = "2.8.2"
+lifecycleRuntimeKtx = "2.8.3"
 loggingInterceptor = "4.12.0"
 playServicesLocation = "21.3.0"
 retrofit = "2.11.0"
 swiperefreshlayout = "1.1.0"
 exifinterface = "1.3.7"
-mockitoCore = "5.6.0"
-mockitoInline = "5.2.0"
 googleAndroidLibrariesMapsplatformSecretsGradlePlugin = "2.0.1"
 playServicesMaps = "19.0.0"
 pagingRuntimeKtx = "3.3.0"
+coreTesting = "2.2.0"
+kotlinxCoroutinesTest = "1.6.1"
+mockitoCore = "5.6.0"
+mockitoInline = "5.2.0"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activity" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+androidx-espresso-idling-resource = { module = "androidx.test.espresso:espresso-idling-resource", version.ref = "espresso" }
 androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycleViewmodelKtx" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
 androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
@@ -37,7 +40,7 @@ compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "compi
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
@@ -48,10 +51,13 @@ play-services-location = { module = "com.google.android.gms:play-services-locati
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit2-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 androidx-exifinterface = { module = "androidx.exifinterface:exifinterface", version.ref = "exifinterface" }
-mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
-mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
 androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "pagingRuntimeKtx" }
+androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
+mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
+androidx-espresso-intents = { group = "androidx.test.espresso", name = "espresso-intents", version.ref = "espresso" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

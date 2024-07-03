@@ -1,4 +1,4 @@
-package com.arfian.story.data
+package com.arfian.story.view.story.home
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
