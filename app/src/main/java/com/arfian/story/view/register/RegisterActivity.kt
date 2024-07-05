@@ -46,20 +46,21 @@ class RegisterActivity : AppCompatActivity() {
                 viewModel.setLoadingState(true)
                 when (val result = viewModel.register(username, email, password)) {
                     is Result.Loading -> {
-                        // Show loading indicator
                         viewModel.setLoadingState(true)
                     }
+
                     is Result.Success -> {
-                        // Hide loading indicator
                         viewModel.setLoadingState(false)
-                        Toast.makeText(this@RegisterActivity, result.data, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@RegisterActivity, result.data, Toast.LENGTH_SHORT)
+                            .show()
                         val intent = Intent(this@RegisterActivity, WelcomeActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                        intent.flags =
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                         startActivity(intent)
                         finish()
                     }
+
                     is Result.Error -> {
-                        // Hide loading indicator
                         viewModel.setLoadingState(false)
                         AlertDialog.Builder(this@RegisterActivity)
                             .setTitle(getString(R.string.failed))

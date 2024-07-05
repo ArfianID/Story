@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("kotlin-parcelize")
+    id("com.google.devtools.ksp")
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
 }
 
@@ -36,6 +37,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+        freeCompilerArgs +=("-opt-in=kotlin.RequiresOptIn")
     }
     buildFeatures {
         viewBinding = true
@@ -87,6 +89,12 @@ dependencies {
     implementation(libs.androidx.paging.runtime.ktx)
     implementation (libs.play.services.location)
 
-    implementation (libs.play.services.location)
+    implementation (libs.androidx.room.runtime)
+    ksp(libs.symbol.processing.api)
+    ksp(libs.androidx.room.compiler)
+    implementation (libs.androidx.room.ktx)
+    implementation(libs.androidx.room.paging)
 
 }
+
+

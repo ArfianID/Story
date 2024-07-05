@@ -4,10 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.arfian.story.data.StoryRepository
+import com.arfian.story.data.service.responses.Result
 import com.arfian.story.data.service.responses.StoryItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import com.arfian.story.data.service.responses.Result
 
 class MapsViewModel(private val storyRepository: StoryRepository) : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()

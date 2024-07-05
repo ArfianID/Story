@@ -1,3 +1,4 @@
+
 package com.arfian.story.data.service.responses
 
 import android.os.Parcelable
@@ -6,34 +7,34 @@ import kotlinx.parcelize.Parcelize
 
 data class StoryResponse(
 
-	@field:SerializedName("listStory")
-	val listStory: List<StoryItem>,
+    @field:SerializedName("listStory")
+    val listStory: List<StoryItem>,
 
-	@field:SerializedName("message")
-	val message: String
+    @field:SerializedName("message")
+    val message: String
 )
 
 @Parcelize
 data class StoryItem(
 
-	@field:SerializedName("photoUrl")
-	val photoUrl: String,
+    @field:SerializedName("photoUrl")
+    val photoUrl: String,
 
-	@field:SerializedName("createdAt")
-	val createdAt: String,
+    @field:SerializedName("createdAt")
+    val createdAt: String,
 
-	@field:SerializedName("name")
-	val name: String,
+    @field:SerializedName("name")
+    val name: String,
 
-	@field:SerializedName("description")
-	val description: String,
+    @field:SerializedName("description")
+    val description: String,
 
-	@field:SerializedName("lon")
-	val lon: Double,
+    @field:SerializedName("lon")
+    val lon: Double,
 
-	@field:SerializedName("id")
-	val id: String,
+    @field:SerializedName("id")
+    val id: String,
 
-	@field:SerializedName("lat")
-	val lat: Double
+    @field:SerializedName("lat")
+    val lat: Double
 ) : Parcelable

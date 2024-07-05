@@ -25,7 +25,6 @@
     <string name="email_is_not_valid">El correo no es válido</string>
     <string name="password_must_be_at_least_8_characters">La contraseña debe tener al menos 8 caracteres</string>
     <string name="the_list_is_empty">La lista está vacía</string>
-    <string name="no_internet_connection_please_try_again">Sin conexión a Internet. Inténtalo de nuevo.</string>
     <string name="try_again">Intentar otra vez</string>
     <string name="language">idioma</string>
     <string name="title_signup_page">¡Completa tus datos a continuación!</string>
@@ -45,5 +44,6 @@
     <string name="congratulations_you_re_successfully_registered">¡Felicitaciones %1$s, estás registrado exitosamente!</string>
     <string name="congratulations_you_re_successfully_logged_in">Felicitaciones %1$s, has iniciado sesión correctamente</string>
     <string name="story_uploaded_successfully">Historia cargada exitosamente</string>
+    <string name="map">mapa</string>
 
 </resources>

@@ -25,7 +25,6 @@
     <string name="email_is_not_valid">電子メールが無効です</string>
     <string name="password_must_be_at_least_8_characters">パスワードは8文字以上でなければなりません</string>
     <string name="the_list_is_empty">リストは空です</string>
-    <string name="no_internet_connection_please_try_again">インターネット接続がありません。もう一度試してください。</string>
     <string name="try_again">もう一度やり直してください</string>
     <string name="language">言語</string>
     <string name="title_signup_page">以下にデータを入力してください。</string>
@@ -45,5 +44,6 @@
     <string name="congratulations_you_re_successfully_registered">おめでとうございます %1$s は正常に登録されました!</string>
     <string name="congratulations_you_re_successfully_logged_in">おめでとうございます %1$s、ログインに成功しました</string>
     <string name="story_uploaded_successfully">ストーリーが正常にアップロードされました</string>
+    <string name="map">地図</string>
 
 </resources>

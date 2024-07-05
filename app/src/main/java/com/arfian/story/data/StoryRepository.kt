@@ -1,13 +1,17 @@
 package com.arfian.story.data
 
 import android.content.Context
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.room.withTransaction
 import com.arfian.story.R
 import com.arfian.story.data.pref.LanguagePreference
 import com.arfian.story.data.pref.SessionModel
 import com.arfian.story.data.pref.SessionPreference
+import com.arfian.story.data.room.StoryDatabase
+import com.arfian.story.data.room.StoryEntity
 import com.arfian.story.data.service.api.ApiService
 import com.arfian.story.data.service.responses.LoginResponse
 import com.arfian.story.data.service.responses.RegisterResponse
@@ -16,7 +20,6 @@ import com.arfian.story.data.service.responses.StoryItem
 import com.arfian.story.data.service.responses.StoryResponse
 import com.arfian.story.data.service.responses.UploadResponse
 import com.arfian.story.utils.wrapEspressoIdlingResource
-import com.arfian.story.view.story.home.StoryPagingSource
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -29,6 +32,7 @@ class StoryRepository private constructor(
     private val context: Context,
     private val sessionPreference: SessionPreference,
     private val languagePreference: LanguagePreference,
+    private val storyDatabase: StoryDatabase,
     private val apiService: ApiService
 ) {
 
@@ -43,6 +47,10 @@ class StoryRepository private constructor(
     suspend fun logout() {
         wrapEspressoIdlingResource {
             sessionPreference.logout()
+            storyDatabase.withTransaction {
+                storyDatabase.storyDao().deleteAll()
+                storyDatabase.remoteKeyDao().deleteRemoteKey()
+            }
         }
     }
 
@@ -82,7 +90,8 @@ class StoryRepository private constructor(
                     val response = apiService.login(email, password).execute()
                     val body = response.body()
                     if (response.isSuccessful && body != null && !body.error) {
-                        val user = SessionModel(body.loginResult.userId, body.loginResult.token, true)
+                        val user =
+                            SessionModel(body.loginResult.userId, body.loginResult.token, true)
                         saveSession(user)
                         Result.Success(
                             context.getString(
@@ -108,14 +117,12 @@ class StoryRepository private constructor(
         }
     }
 
-    fun getStories(): Flow<PagingData<StoryItem>> {
+    @OptIn(ExperimentalPagingApi::class)
+    fun getStories(): Flow<PagingData<StoryEntity>> {
         return Pager(
-            config = PagingConfig(
-                pageSize = 5
-            ),
-            pagingSourceFactory = {
-                StoryPagingSource(apiService)
-            }
+            config = PagingConfig(enablePlaceholders = false, pageSize = 20),
+            remoteMediator = StoryRemoteMediator(apiService, storyDatabase),
+            pagingSourceFactory = { storyDatabase.storyDao().getAllStory() }
         ).flow
     }
 
@@ -178,7 +185,8 @@ class StoryRepository private constructor(
             context: Context,
             sessionPreference: SessionPreference,
             languagePreference: LanguagePreference,
+            storyDatabase: StoryDatabase,
             apiService: ApiService
-        ) = StoryRepository(context, sessionPreference, languagePreference, apiService)
+        ) = StoryRepository(context, sessionPreference, languagePreference, storyDatabase, apiService)
     }
 }

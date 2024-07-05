@@ -4,6 +4,7 @@ import android.content.Context
 import com.arfian.story.data.StoryRepository
 import com.arfian.story.data.pref.LanguagePreference
 import com.arfian.story.data.pref.SessionPreference
+import com.arfian.story.data.room.StoryDatabase
 import com.arfian.story.data.service.api.ApiConfig
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -15,6 +16,7 @@ object Injection {
         val user = runBlocking { pref.getSession().first() }
         val apiService = ApiConfig.getApiService(user.token)
         val languagePreference = LanguagePreference(context)
-        return StoryRepository.getInstance(context, pref, languagePreference, apiService)
+        val storyDatabase = StoryDatabase.getInstance(context)
+        return StoryRepository.getInstance(context, pref, languagePreference, storyDatabase, apiService)
     }
 }

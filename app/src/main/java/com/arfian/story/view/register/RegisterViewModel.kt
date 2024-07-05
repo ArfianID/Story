@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.arfian.story.data.StoryRepository
 import com.arfian.story.data.service.responses.Result
 
-class RegisterViewModel(private val repository: StoryRepository): ViewModel() {
+class RegisterViewModel(private val repository: StoryRepository) : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 

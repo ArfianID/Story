@@ -22,7 +22,6 @@
     <string name="password_must_be_at_least_8_characters">Kata sandi minimal harus terdiri dari 8 karakter</string>
     <string name="tiga_orang_sedang_berkumpul_di_taman_dan_saling_berbagi_cerita">Tiga orang sedang berkumpul di taman dan saling berbagi cerita</string>
     <string name="the_list_is_empty">Daftar ini kosong</string>
-    <string name="no_internet_connection_please_try_again">Tidak ada koneksi internet. Silakan coba lagi.</string>
     <string name="try_again">Coba lagi</string>
     <string name="language">Bahasa</string>
     <string name="message_login_page">Masukkan dulu datamu ya</string>
@@ -46,4 +45,5 @@
     <string name="congratulations_you_re_successfully_registered">Selamat %1$s, Anda berhasil mendaftar!</string>
     <string name="congratulations_you_re_successfully_logged_in">Selamat %1$s, Anda berhasil masuk</string>
     <string name="story_uploaded_successfully">Cerita berhasil diunggah</string>
+    <string name="map">peta</string>
 </resources>

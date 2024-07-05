@@ -8,7 +8,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.arfian.story.data.StoryRepository
 import com.arfian.story.data.pref.SessionModel
-import com.arfian.story.data.service.responses.StoryItem
+import com.arfian.story.data.room.StoryEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
@@ -24,7 +24,7 @@ class HomeStoryViewModel(private val repository: StoryRepository) : ViewModel() 
         return repository.getSession()
     }
 
-    fun getStories(): Flow<PagingData<StoryItem>> {
+    fun getStories(): Flow<PagingData<StoryEntity>> {
         return repository.getStories().cachedIn(viewModelScope)
     }
 

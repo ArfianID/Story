@@ -1,11 +1,8 @@
 package com.arfian.story.view.story.home
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
@@ -22,13 +19,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arfian.story.R
-import com.arfian.story.data.pref.SessionModel
 import com.arfian.story.databinding.ActivityHomeStoryBinding
 import com.arfian.story.view.ViewModelFactory
 import com.arfian.story.view.map.MapsActivity
 import com.arfian.story.view.upload.AddStoryActivity
 import com.arfian.story.view.welcome.WelcomeActivity
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -49,14 +44,10 @@ class HomeStoryActivity : AppCompatActivity() {
 
         setupView()
         showLoading()
-        setupFabAddStory()
-        setupRefresh()
-    }
-
-    override fun onResume() {
-        super.onResume()
         checkUserSession()
         loadStories()
+        setupFabAddStory()
+        setupRefresh()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -103,10 +94,12 @@ class HomeStoryActivity : AppCompatActivity() {
     }
 
     private fun checkUserSession() {
-        viewModel.getSession().asLiveData().observe(this) { user: SessionModel ->
-            if (!user.isLogin) {
+        viewModel.getSession().asLiveData().observe(this) { session ->
+            if (session.token.isEmpty()) {
                 startActivity(Intent(this, WelcomeActivity::class.java))
                 finish()
+            } else {
+                loadStories()
             }
         }
     }
@@ -117,7 +110,6 @@ class HomeStoryActivity : AppCompatActivity() {
         adapter = HomeStoryAdapter()
         binding.rvStory.apply {
             layoutManager = LinearLayoutManager(this@HomeStoryActivity)
-            this.adapter = adapter
             layoutAnimation = AnimationUtils.loadLayoutAnimation(this@HomeStoryActivity, R.anim.item_animation_from_top)
         }
 
@@ -126,7 +118,7 @@ class HomeStoryActivity : AppCompatActivity() {
         )
 
         viewModel.getStories().collectLatest { pagingData ->
-            adapter.submitData(lifecycle, pagingData)
+            adapter.submitData(pagingData)
             viewModel.setLoadingState(true)
             adapter.addLoadStateListener { loadStates ->
                 if (loadStates.refresh is LoadState.NotLoading) {
@@ -142,7 +134,6 @@ class HomeStoryActivity : AppCompatActivity() {
                     }
                 } else if (loadStates.refresh is LoadState.Error) {
                     viewModel.setLoadingState(false) // Set loading state to false when there's an error
-                    binding.ivBlankList.visibility = View.VISIBLE // Show ImageView when there's an error
                 } else {
                     binding.ivBlankList.visibility = View.GONE // Hide ImageView when data is loading
                 }
@@ -163,25 +154,6 @@ class HomeStoryActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.title = getString(R.string.app_name)
-    }
-
-    private fun isNetworkConnected(): Boolean {
-        val connectivityManager =
-            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork = connectivityManager.activeNetwork
-        val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
-        return networkCapabilities != null &&
-                networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-    }
-
-    private fun showNetworkErrorSnackbar(message: String) {
-        Snackbar.make(
-            binding.root,
-            message,
-            Snackbar.LENGTH_SHORT
-        ).setAction(getString(R.string.try_again)) {
-            loadStories()
-        }.show()
     }
 
     private fun showLoading() {
@@ -232,12 +204,8 @@ class HomeStoryActivity : AppCompatActivity() {
     }
 
     private fun loadStories() {
-        if (isNetworkConnected()) {
-            lifecycleScope.launch {
-                setupAdapter()
-            }
-        } else {
-            showNetworkErrorSnackbar(getString(R.string.no_internet_connection_please_try_again))
+        lifecycleScope.launch {
+            setupAdapter()
         }
     }
 }

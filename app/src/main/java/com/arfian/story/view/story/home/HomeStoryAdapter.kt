@@ -7,12 +7,12 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.arfian.story.R
-import com.arfian.story.data.service.responses.StoryItem
+import com.arfian.story.data.room.StoryEntity
 import com.arfian.story.databinding.ItemLayoutBinding
 import com.arfian.story.view.story.detail.DetailStoryActivity
 import com.bumptech.glide.Glide
 
-class HomeStoryAdapter : PagingDataAdapter<StoryItem, HomeStoryAdapter.ViewHolder>(DIFF_CALLBACK) {
+class HomeStoryAdapter : PagingDataAdapter<StoryEntity, HomeStoryAdapter.ViewHolder>(DIFF_CALLBACK) {
     class ViewHolder(val binding: ItemLayoutBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -41,12 +41,12 @@ class HomeStoryAdapter : PagingDataAdapter<StoryItem, HomeStoryAdapter.ViewHolde
     }
 }
 
-val DIFF_CALLBACK = object : DiffUtil.ItemCallback<StoryItem>() {
-    override fun areItemsTheSame(oldItem: StoryItem, newItem: StoryItem): Boolean {
+val DIFF_CALLBACK = object : DiffUtil.ItemCallback<StoryEntity>() {
+    override fun areItemsTheSame(oldItem: StoryEntity, newItem: StoryEntity): Boolean {
         return oldItem == newItem
     }
 
-    override fun areContentsTheSame(oldItem: StoryItem, newItem: StoryItem): Boolean {
+    override fun areContentsTheSame(oldItem: StoryEntity, newItem: StoryEntity): Boolean {
         return oldItem.id == newItem.id
     }
 }

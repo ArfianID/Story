@@ -40,9 +40,13 @@ class ValidationEditText @JvmOverloads constructor(
                             error = null
                         }
                     }
+
                     1 -> { // Password validation
                         if (s.toString().length < 8) {
-                            setError(context.getString(R.string.password_must_be_at_least_8_characters), null)
+                            setError(
+                                context.getString(R.string.password_must_be_at_least_8_characters),
+                                null
+                            )
                         } else {
                             error = null
                         }

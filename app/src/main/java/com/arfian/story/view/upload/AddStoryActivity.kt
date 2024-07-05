@@ -77,7 +77,7 @@ class AddStoryActivity : AppCompatActivity() {
     private fun initializeLocationCallback() {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(p0: LocationResult) {
-                for (location in p0.locations){
+                for (location in p0.locations) {
                     if (location != null) {
                         latitude = location.latitude.toFloat()
                         longitude = location.longitude.toFloat()
@@ -98,8 +98,10 @@ class AddStoryActivity : AppCompatActivity() {
             currentImageUri = uri
             showImage()
         } else {
-            Toast.makeText(this@AddStoryActivity,
-                getString(R.string.no_media_selected), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this@AddStoryActivity,
+                getString(R.string.no_media_selected), Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -150,10 +152,12 @@ class AddStoryActivity : AppCompatActivity() {
 
         setLoadingState(true)
 
-        when (val result = viewModel.uploadStory(compressedInputStream, description, latitude, longitude)) {
+        when (val result =
+            viewModel.uploadStory(compressedInputStream, description, latitude, longitude)) {
             is Result.Loading -> {
                 viewModel.setLoadingState(true)
             }
+
             is Result.Success -> {
                 withContext(Dispatchers.Main) {
                     viewModel.setLoadingState(false)
@@ -164,6 +168,7 @@ class AddStoryActivity : AppCompatActivity() {
                     finish()
                 }
             }
+
             is Result.Error -> {
                 withContext(Dispatchers.Main) {
                     viewModel.setLoadingState(false)
@@ -200,7 +205,9 @@ class AddStoryActivity : AppCompatActivity() {
     }
 
     private fun showToast(message: String) {
-        Toast.makeText(this@AddStoryActivity, message, Toast.LENGTH_SHORT).show()
+        CoroutineScope(Dispatchers.Main).launch {
+            Toast.makeText(this@AddStoryActivity, message, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun setupView() {
@@ -226,10 +233,10 @@ class AddStoryActivity : AppCompatActivity() {
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
-            )!= PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_COARSE_LOCATION
-            )!= PackageManager.PERMISSION_GRANTED
+            ) != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
                 this,
@@ -240,7 +247,6 @@ class AddStoryActivity : AppCompatActivity() {
                 REQUEST_LOCATION_PERMISSION
             )
         } else {
-            // Permission already granted, get the location
             getLocation()
         }
     }
@@ -253,11 +259,13 @@ class AddStoryActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_LOCATION_PERMISSION) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted, get the location
                 getLocation()
             } else {
-                // Permission not granted, show a message
-                Toast.makeText(this, "Location permission not granted. Location will not be posted.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Location permission not granted. Location will not be posted.",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -274,7 +282,11 @@ class AddStoryActivity : AppCompatActivity() {
             val locationRequest = LocationRequest.Builder(10000)
                 .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
                 .build()
-            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
+            fusedLocationClient.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                Looper.getMainLooper()
+            )
         }
     }
 

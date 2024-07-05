@@ -25,7 +25,6 @@
     <string name="email_is_not_valid">Email ist ungültig</string>
     <string name="password_must_be_at_least_8_characters">Das Passwort muss mindestens 8 Zeichen lang sein</string>
     <string name="the_list_is_empty">Die Liste ist leer</string>
-    <string name="no_internet_connection_please_try_again">Keine Internetverbindung. Bitte versuche es erneut.</string>
     <string name="try_again">Versuchen Sie es erneut</string>
     <string name="language">Sprache</string>
     <string name="title_signup_page">Vervollständigen Sie unten Ihre Daten!</string>
@@ -45,5 +44,6 @@
     <string name="congratulations_you_re_successfully_registered">Herzlichen Glückwunsch %1$s, Sie sind erfolgreich registriert!</string>
     <string name="congratulations_you_re_successfully_logged_in">Herzlichen Glückwunsch %1$s, Sie sind erfolgreich angemeldet</string>
     <string name="story_uploaded_successfully">Die Geschichte wurde erfolgreich hochgeladen</string>
+    <string name="map">Karte</string>
 
 </resources>

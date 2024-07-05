@@ -1,4 +1,4 @@
-package com.arfian.story.view.story.home
+package com.arfian.story
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.paging.AsyncPagingDataDiffer
@@ -7,11 +7,10 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
-import com.arfian.story.DataDummy
-import com.arfian.story.MainDispatcherRule
 import com.arfian.story.data.StoryRepository
 import com.arfian.story.data.service.api.ApiService
-import com.arfian.story.data.service.responses.StoryItem
+import com.arfian.story.data.room.StoryEntity
+import com.arfian.story.view.story.home.HomeStoryViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,6 +23,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
+
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -40,12 +40,12 @@ class HomeStoryViewModelTest {
     @Test
     fun `when Get Stories Returns Data then Data Is Returned`() = runTest {
         val dummyStoryItems = DataDummy.generateDummyQuoteResponse()
-        val data: PagingData<StoryItem> = StoryPagingSource.snapshot(dummyStoryItems)
+        val data: PagingData<StoryEntity> = StoryPagingSource.snapshot(dummyStoryItems)
         val expectedStories = MutableStateFlow(data)
 
         Mockito.`when`(storyRepository.getStories()).thenReturn(expectedStories)
         val homeStoryViewModel = HomeStoryViewModel(storyRepository)
-        val actualStories: PagingData<StoryItem> = homeStoryViewModel.getStories().first()
+        val actualStories: PagingData<StoryEntity> = homeStoryViewModel.getStories().first()
 
         val differ = AsyncPagingDataDiffer(
             diffCallback = HomeStoryAdapter.DIFF_CALLBACK,
@@ -61,12 +61,12 @@ class HomeStoryViewModelTest {
 
     @Test
     fun `when Get Stories Returns Empty Then No Data Is Returned`() = runTest {
-        val emptyData: PagingData<StoryItem> = PagingData.from(emptyList())
+        val emptyData: PagingData<StoryEntity> = PagingData.from(emptyList())
         val expectedStories = MutableStateFlow(emptyData)
 
         Mockito.`when`(storyRepository.getStories()).thenReturn(expectedStories)
         val homeStoryViewModel = HomeStoryViewModel(storyRepository)
-        val actualStories: PagingData<StoryItem> = homeStoryViewModel.getStories().first()
+        val actualStories: PagingData<StoryEntity> = homeStoryViewModel.getStories().first()
 
         val differ = AsyncPagingDataDiffer(
             diffCallback = HomeStoryAdapter.DIFF_CALLBACK,
@@ -79,29 +79,39 @@ class HomeStoryViewModelTest {
     }
 }
 
-class StoryPagingSource(private val apiService: ApiService) : PagingSource<Int, StoryItem>() {
+class StoryPagingSource(private val apiService: ApiService) : PagingSource<Int, StoryEntity>() {
     companion object {
-        fun snapshot(items: List<StoryItem>): PagingData<StoryItem> {
+        fun snapshot(items: List<StoryEntity>): PagingData<StoryEntity> {
             return PagingData.from(items)
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, StoryItem>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, StoryEntity>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
             anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, StoryItem> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, StoryEntity> {
         val initialPageIndex = 1
         val position = params.key ?: initialPageIndex
         return try {
-            val responseData = apiService.getStories(position, params.loadSize)
+            val responseData = apiService.getStories(position, params.loadSize).listStory.map { storyItem ->
+                StoryEntity(
+                    id = storyItem.id,
+                    name = storyItem.name,
+                    description = storyItem.description,
+                    photoUrl = storyItem.photoUrl,
+                    createdAt = storyItem.createdAt,
+                    lon = storyItem.lon,
+                    lat = storyItem.lat
+                )
+            }
             LoadResult.Page(
-                data = responseData.listStory,
+                data = responseData,
                 prevKey = if (position == initialPageIndex) null else position - 1,
-                nextKey = if (responseData.listStory.isEmpty()) null else position + 1
+                nextKey = if (responseData.isEmpty()) null else position + 1
             )
         } catch (exception: Exception) {
             return LoadResult.Error(exception)
@@ -118,12 +128,12 @@ private val noopListUpdateCallback = object : ListUpdateCallback {
 
 class HomeStoryAdapter {
     companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<StoryItem>() {
-            override fun areItemsTheSame(oldItem: StoryItem, newItem: StoryItem): Boolean {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<StoryEntity>() {
+            override fun areItemsTheSame(oldItem: StoryEntity, newItem: StoryEntity): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: StoryItem, newItem: StoryItem): Boolean {
+            override fun areContentsTheSame(oldItem: StoryEntity, newItem: StoryEntity): Boolean {
                 return oldItem == newItem
             }
         }

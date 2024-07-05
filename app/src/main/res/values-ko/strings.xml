@@ -25,7 +25,6 @@
     <string name="email_is_not_valid">이메일이 유효하지 않습니다</string>
     <string name="password_must_be_at_least_8_characters">비밀번호는 8자 이상이어야 합니다.</string>
     <string name="the_list_is_empty">목록이 비어 있습니다.</string>
-    <string name="no_internet_connection_please_try_again">인터넷에 연결되지 않음. 다시 시도해 주세요.</string>
     <string name="try_again">다시 시도하십시오</string>
     <string name="language">언어</string>
     <string name="title_signup_page">아래 데이터를 완성하세요!</string>
@@ -45,5 +44,6 @@
     <string name="congratulations_you_re_successfully_registered">%1$s 축하합니다. 성공적으로 등록되었습니다!</string>
     <string name="congratulations_you_re_successfully_logged_in">%1$s 축하합니다. 성공적으로 로그인되었습니다.</string>
     <string name="story_uploaded_successfully">스토리가 성공적으로 업로드되었습니다.</string>
+    <string name="map">지도</string>
 
 </resources>

@@ -25,7 +25,6 @@
     <string name="email_is_not_valid">E-mail is niet geldig</string>
     <string name="password_must_be_at_least_8_characters">Wachtwoord moet minimaal 8 tekens lang zijn</string>
     <string name="the_list_is_empty">De lijst is leeg</string>
-    <string name="no_internet_connection_please_try_again">Geen internet verbinding. Probeer het opnieuw.</string>
     <string name="try_again">Probeer het nog eens</string>
     <string name="language">taal</string>
     <string name="title_signup_page">Vul hieronder uw gegevens in!</string>
@@ -45,5 +44,6 @@
     <string name="congratulations_you_re_successfully_registered">Gefeliciteerd %1$s, je bent succesvol geregistreerd!</string>
     <string name="congratulations_you_re_successfully_logged_in">Gefeliciteerd %1$s, je bent succesvol ingelogd</string>
     <string name="story_uploaded_successfully">Verhaal succesvol geüpload</string>
+    <string name="map">kaart</string>
 
 </resources>
